@@ -1,0 +1,98 @@
+# type User {
+#   id: ID!
+#   name: String
+#   friends: [User] @relation(name: "FRIENDS", direction: "BOTH")
+#   reviews: [Review] @relation(name: "WROTE", direction: "OUT")
+#   avgStars: Float
+#     @cypher(
+#       statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN toFloat(avg(r.stars))"
+#     )
+#   numReviews: Int
+#     @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN COUNT(r)")
+#   recommendations(first: Int = 3): [Business] @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review)-[:REVIEWS]->(:Business)<-[:REVIEWS]-(:Review)<-[:WROTE]-(:User)-[:WROTE]->(:Review)-[:REVIEWS]->(rec:Business) WHERE NOT EXISTS( (this)-[:WROTE]->(:Review)-[:REVIEWS]->(rec) )WITH rec, COUNT(*) AS num ORDER BY num DESC LIMIT $first RETURN rec")
+# }
+
+type World {
+  id: ID!
+  name: String
+  summary: String
+  continents: [Continent] @relation(name: "CONTINENTS", direction: "IN")
+  type: String
+  notes: [String]
+}
+
+type Continent {
+  id: ID!
+  name: String
+  summary: String
+  countries: [Country] @relation(name: "COUNTRIES", direction: "IN")
+  cities: [City] @relation(name: "CITIES", direction: "IN")
+  climate: String
+  notes: [String]
+}
+
+type Country {
+  id:ID!
+  summary: String
+  notes: [String]
+}
+
+type City {
+  id:ID!
+}
+
+# type Ward {
+
+# }
+
+# type District {
+
+# }
+
+# type Precinct {
+
+# }
+
+# type Person {
+
+# }
+
+# type Dead {
+
+# }
+
+# type Dragon {
+
+# }
+
+# type Demon {
+
+# }
+
+# type GreatWolf {
+
+# }
+
+# type Front {
+
+# }
+
+# type Event {
+
+# }
+
+# type Item {
+
+# }
+
+# type Category {
+#   name: ID!
+#   businesses: [Business] @relation(name: "IN_CATEGORY", direction: "IN")
+# }
+
+type Query {
+  allCountries: [Country]
+    @cypher(
+      statement: "MATCH (u:Country) RETURN u"
+    )
+}

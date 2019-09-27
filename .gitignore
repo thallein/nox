@@ -10,3 +10,10 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+<<<<<<< HEAD
+=======
+
+# Node
+node_modules/
+build/
+>>>>>>> template
