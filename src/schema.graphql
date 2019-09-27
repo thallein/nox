@@ -1,45 +1,98 @@
-type User {
+# type User {
+#   id: ID!
+#   name: String
+#   friends: [User] @relation(name: "FRIENDS", direction: "BOTH")
+#   reviews: [Review] @relation(name: "WROTE", direction: "OUT")
+#   avgStars: Float
+#     @cypher(
+#       statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN toFloat(avg(r.stars))"
+#     )
+#   numReviews: Int
+#     @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN COUNT(r)")
+#   recommendations(first: Int = 3): [Business] @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review)-[:REVIEWS]->(:Business)<-[:REVIEWS]-(:Review)<-[:WROTE]-(:User)-[:WROTE]->(:Review)-[:REVIEWS]->(rec:Business) WHERE NOT EXISTS( (this)-[:WROTE]->(:Review)-[:REVIEWS]->(rec) )WITH rec, COUNT(*) AS num ORDER BY num DESC LIMIT $first RETURN rec")
+# }
+
+type World {
   id: ID!
   name: String
-  friends: [User] @relation(name: "FRIENDS", direction: "BOTH")
-  reviews: [Review] @relation(name: "WROTE", direction: "OUT")
-  avgStars: Float
-    @cypher(
-      statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN toFloat(avg(r.stars))"
-    )
-  numReviews: Int
-    @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review) RETURN COUNT(r)")
-  recommendations(first: Int = 3): [Business] @cypher(statement: "MATCH (this)-[:WROTE]->(r:Review)-[:REVIEWS]->(:Business)<-[:REVIEWS]-(:Review)<-[:WROTE]-(:User)-[:WROTE]->(:Review)-[:REVIEWS]->(rec:Business) WHERE NOT EXISTS( (this)-[:WROTE]->(:Review)-[:REVIEWS]->(rec) )WITH rec, COUNT(*) AS num ORDER BY num DESC LIMIT $first RETURN rec")
+  summary: String
+  continents: [Continent] @relation(name: "CONTINENTS", direction: "IN")
+  type: String
+  notes: [String]
 }
 
-type Business {
+type Continent {
   id: ID!
   name: String
-  address: String
-  city: String
-  state: String
-  avgStars: Float @cypher(statement: "MATCH (this)<-[:REVIEWS]-(r:Review) RETURN coalesce(avg(r.stars),0.0)")
-  reviews: [Review] @relation(name: "REVIEWS", direction: "IN")
-  categories: [Category] @relation(name: "IN_CATEGORY", direction: "OUT")
+  summary: String
+  countries: [Country] @relation(name: "COUNTRIES", direction: "IN")
+  cities: [City] @relation(name: "CITIES", direction: "IN")
+  climate: String
+  notes: [String]
 }
 
-type Review {
-  id: ID!
-  stars: Int
-  text: String
-  date: Date
-  business: Business @relation(name: "REVIEWS", direction: "OUT")
-  user: User @relation(name: "WROTE", direction: "IN")
+type Country {
+  id:ID!
+  summary: String
+  notes: [String]
 }
 
-type Category {
-  name: ID!
-  businesses: [Business] @relation(name: "IN_CATEGORY", direction: "IN")
+type City {
+  id:ID!
 }
+
+# type Ward {
+
+# }
+
+# type District {
+
+# }
+
+# type Precinct {
+
+# }
+
+# type Person {
+
+# }
+
+# type Dead {
+
+# }
+
+# type Dragon {
+
+# }
+
+# type Demon {
+
+# }
+
+# type GreatWolf {
+
+# }
+
+# type Front {
+
+# }
+
+# type Event {
+
+# }
+
+# type Item {
+
+# }
+
+# type Category {
+#   name: ID!
+#   businesses: [Business] @relation(name: "IN_CATEGORY", direction: "IN")
+# }
 
 type Query {
-  usersBySubstring(substring: String): [User]
+  allCountries: [Country]
     @cypher(
-      statement: "MATCH (u:User) WHERE u.name CONTAINS $substring RETURN u"
+      statement: "MATCH (u:Country) RETURN u"
     )
 }
