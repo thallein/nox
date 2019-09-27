@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-# nox
-=======
 # Nox
->>>>>>> template
